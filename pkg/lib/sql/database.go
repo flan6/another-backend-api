@@ -18,7 +18,7 @@ func NewDatabase(connPath string) *sqlx.DB {
 
 	db.MustExec(schema)
 
-	// PLACEHOLDER
+	// EXAMPLE DATA
 	db.MustExec("INSERT INTO products (name, value) VALUES ('Keyboard', 19900);")
 	db.MustExec("INSERT INTO products (name, value) VALUES ('Mouse', 9900);")
 

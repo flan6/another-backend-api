@@ -8,7 +8,7 @@ import (
 )
 
 type ProductRepository interface {
-	CreateProduct(context.Context, entity.Product) error
+	CreateProduct(context.Context, *entity.Product) error
 	UpdateProduct(ctx context.Context, id int, product entity.Product) error
 	DeleteProduct(ctx context.Context, id int) error
 	GetProduct(ctx context.Context, id int) (entity.Product, error)
@@ -39,6 +39,15 @@ func (p ProductService) DeleteProduct(ctx context.Context, id int) error {
 	return p.productRepository.DeleteProduct(ctx, id)
 }
 
-func (p ProductService) CreateProduct(ctx context.Context, product productModel.Product) error {
-	return p.productRepository.CreateProduct(ctx, productModel.GetProduct(product))
+func (p ProductService) CreateProduct(ctx context.Context, product *productModel.Product) error {
+	entityProduct := productModel.GetProduct(*product)
+
+	err := p.productRepository.CreateProduct(ctx, &entityProduct)
+	if err != nil {
+		return err
+	}
+
+	product.ID = entityProduct.ID
+
+	return nil
 }

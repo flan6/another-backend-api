@@ -1,6 +1,9 @@
 package api
 
 import (
+	"time"
+
+	"github.com/ReneKroon/ttlcache"
 	echo "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -25,10 +28,12 @@ func InjectApiRoutes(e *echo.Echo) {
 	))
 
 	db := lsql.NewDatabase(config.DBPath())
+	cache := ttlcache.NewCache()
+	cache.SetTTL(time.Hour)
 
 	productHandler := product.NewProductHandler(
 		service.NewProductService(
-			sql.NewProductRepository(db),
+			sql.NewProductRepository(db, cache),
 		),
 	)
 

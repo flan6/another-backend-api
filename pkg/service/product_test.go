@@ -13,7 +13,7 @@ import (
 // Faker implements ProductRepository for mocking
 type faker struct{}
 
-func (faker) CreateProduct(_ context.Context, e entity.Product) error {
+func (faker) CreateProduct(_ context.Context, e *entity.Product) error {
 	if e.ID == 1 {
 		return nil
 	}
@@ -117,14 +117,14 @@ func TestCreateProduct(t *testing.T) {
 	productService := service.NewProductService(faker{})
 
 	t.Run("success creating product", func(t *testing.T) {
-		err := productService.CreateProduct(context.Background(), product.Product{ID: 1})
+		err := productService.CreateProduct(context.Background(), &product.Product{ID: 1})
 		if err != nil {
 			t.Fatal(err)
 		}
 	})
 
 	t.Run("error from repository", func(t *testing.T) {
-		err := productService.CreateProduct(context.Background(), product.Product{})
+		err := productService.CreateProduct(context.Background(), &product.Product{})
 		if err == nil {
 			t.Error("CreateProduct() = should return error")
 		}

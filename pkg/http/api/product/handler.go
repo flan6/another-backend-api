@@ -11,7 +11,7 @@ import (
 )
 
 type ProductService interface {
-	CreateProduct(context.Context, Product) error
+	CreateProduct(context.Context, *Product) error
 	UpdateProduct(ctx context.Context, id int, product Product) error
 	DeleteProduct(ctx context.Context, id int) error
 	GetProduct(ctx context.Context, id int) (Product, error)
@@ -44,7 +44,7 @@ func (p ProductHandler) CreateProductHandler(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "invalid product payload")
 	}
 
-	err = p.productService.CreateProduct(context.Background(), product)
+	err = p.productService.CreateProduct(context.Background(), &product)
 	if err != nil {
 		c.Logger().Error(err)
 		return errors.New("could not create product")
