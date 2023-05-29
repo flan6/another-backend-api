@@ -19,8 +19,8 @@ func NewDatabase(connPath string) *sqlx.DB {
 	db.MustExec(schema)
 
 	// EXAMPLE DATA
-	db.MustExec("INSERT INTO products (name, value) VALUES ('Keyboard', 19900);")
-	db.MustExec("INSERT INTO products (name, value) VALUES ('Mouse', 9900);")
+	db.MustExec("INSERT IGNORE INTO products (id, name, value) VALUES (1, 'Keyboard', 19900);")
+	db.MustExec("INSERT IGNORE INTO products (id, name, value) VALUES (2, 'Mouse', 9900);")
 
 	return db
 }
