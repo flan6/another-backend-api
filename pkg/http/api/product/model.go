@@ -39,3 +39,7 @@ func (p Product) Validate() bool {
 
 	return true
 }
+
+func (p *Product) Empty() bool {
+	return p == nil || *p == Product{}
+}
