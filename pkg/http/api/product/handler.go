@@ -1,8 +1,10 @@
+//go:generate go run -mod=mod github.com/golang/mock/mockgen -source=$GOFILE -aux_files=product=model.go -destination=../../../../mocks/service.go
 package product
 
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -31,7 +33,7 @@ func (p ProductHandler) CreateProductHandler(c echo.Context) error {
 	err := json.NewDecoder(c.Request().Body).Decode(&productRequest)
 	if err != nil {
 		c.Logger().Error(err)
-		return errors.New("could not create product, invalid payload")
+		return c.String(http.StatusBadRequest, "could not create product, invalid payload")
 	}
 
 	product := Product{
@@ -50,20 +52,20 @@ func (p ProductHandler) CreateProductHandler(c echo.Context) error {
 		return errors.New("could not create product")
 	}
 
-	return c.String(http.StatusOK, "CreateProductHandler")
+	return c.String(http.StatusOK, fmt.Sprintf("CreateProductHandler - id: %d", product.ID))
 }
 
 func (p ProductHandler) GetProductHandler(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.Logger().Error(err)
-		return errors.New("could not find product")
+		return c.String(http.StatusNotFound, "could not find product")
 	}
 
 	product, err := p.productService.GetProduct(context.Background(), id)
 	if err != nil {
 		c.Logger().Error(err)
-		return errors.New("could not find product")
+		return c.String(http.StatusNotFound, "could not find product")
 	}
 
 	return c.JSON(http.StatusOK, product)
@@ -73,7 +75,7 @@ func (p ProductHandler) UpdateProductHandler(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.Logger().Error(err)
-		return errors.New("could not find product id")
+		return c.String(http.StatusNotFound, "could not find product")
 	}
 
 	var requestProduct UpdateProductRequest
@@ -86,11 +88,10 @@ func (p ProductHandler) UpdateProductHandler(c echo.Context) error {
 	err = json.NewDecoder(body).Decode(&requestProduct)
 	if err != nil {
 		c.Logger().Error(err)
-		return errors.New("could not update product, invalid payload") // TODO : internal server error, must change to 400
+		return c.String(http.StatusBadRequest, "invalid product payload")
 	}
 
 	product := Product{
-		ID:    requestProduct.ID,
 		Name:  requestProduct.Name,
 		Value: requestProduct.Value,
 	}
@@ -108,7 +109,7 @@ func (p ProductHandler) DeleteproductHandler(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.Logger().Error(err)
-		return errors.New("could not find product")
+		return c.String(http.StatusNotFound, "could not find product")
 	}
 
 	err = p.productService.DeleteProduct(context.Background(), id)

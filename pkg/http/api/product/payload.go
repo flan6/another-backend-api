@@ -11,7 +11,6 @@ type CreateProductPayload struct {
 }
 
 type UpdateProductRequest struct {
-	ID    int     `json:"id"`
 	Name  string  `json:"name"`
 	Value float32 `json:"value"`
 }

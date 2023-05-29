@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/ReneKroon/ttlcache v1.7.0
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/golang/mock v1.4.4
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/spf13/viper v1.15.0

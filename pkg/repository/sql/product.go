@@ -44,8 +44,8 @@ func (p ProductRepository) GetProduct(ctx context.Context, id int) (entity.Produ
 }
 
 func (p ProductRepository) UpdateProduct(ctx context.Context, id int, product entity.Product) error {
-	const query = "UPDATE products SET id = ?, name = ?, value = ? WHERE id = ? LIMIT 1"
-	_, err := p.db.Exec(query, product.ID, product.Name, product.Value, id)
+	const query = "UPDATE products SET name = ?, value = ? WHERE id = ? LIMIT 1"
+	_, err := p.db.Exec(query, product.Name, product.Value, id)
 	if err != nil {
 		return err
 	}
