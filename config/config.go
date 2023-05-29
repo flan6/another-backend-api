@@ -11,7 +11,10 @@ func init() {
 	viper.SetConfigType("env")
 
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("app")
+	viper.AddConfigPath("config")
 
+	viper.AutomaticEnv()
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("could not find env file: %w", err))
@@ -19,7 +22,7 @@ func init() {
 }
 
 func BasicAuthUsername() string {
-	return viper.GetString("BASIC_USERNAME")
+	return viper.GetString("BASIC_USER")
 }
 
 func BasicAuthPasswd() string {
